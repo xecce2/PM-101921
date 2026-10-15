@@ -1,11 +1,16 @@
 package com.example.lab02_kalkulator
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
+
+    companion object {
+        private const val TAG = "Kalkulator"
+    }
 
     private lateinit var tvResult: TextView
     private var currentInput = ""
@@ -18,6 +23,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         tvResult = findViewById(R.id.tvResult)
+        Log.i(TAG, "onCreate: aplikacja uruchomiona")
 
         // Jawnie zdefiniowana lista przycisków numerycznych
         val numberButtons = listOf(
@@ -41,6 +47,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 currentInput += digit
                 tvResult.text = currentInput
+                Log.d(TAG, "Wcisnieto cyfre: $digit, wejscie: $currentInput")
             }
         }
 
@@ -55,6 +62,7 @@ class MainActivity : AppCompatActivity() {
                 currentInput += "."
             }
             tvResult.text = currentInput
+            Log.d(TAG, "Wcisnieto kropke, wejscie: $currentInput")
         }
 
         // Przycisk czyszczenia (C)
@@ -64,6 +72,7 @@ class MainActivity : AppCompatActivity() {
             currentOperator = ""
             tvResult.text = "0"
             isNewOperation = true
+            Log.d(TAG, "Wyczyszczono kalkulator (C)")
         }
 
         // Operatory arytmetyczne
@@ -79,6 +88,7 @@ class MainActivity : AppCompatActivity() {
                     firstValue = currentInput.toDouble()
                     currentOperator = op
                     isNewOperation = true
+                    Log.d(TAG, "Operator: $op, pierwsza wartosc: $firstValue")
                 }
             }
         }
@@ -87,6 +97,9 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btnEquals).setOnClickListener {
             if (currentInput.isNotEmpty() && currentOperator.isNotEmpty()) {
                 val secondValue = currentInput.toDouble()
+                if (currentOperator == "/" && secondValue == 0.0) {
+                    Log.w(TAG, "Proba dzielenia przez zero!")
+                }
                 val result = when (currentOperator) {
                     "+" -> firstValue + secondValue
                     "*" -> firstValue * secondValue
@@ -95,6 +108,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 tvResult.text = if (result % 1.0 == 0.0) result.toInt().toString() else result.toString()
                 currentInput = tvResult.text.toString()
+                Log.i(TAG, "Wynik: $firstValue $currentOperator $secondValue = ${tvResult.text}")
                 currentOperator = ""
                 isNewOperation = true
             }
