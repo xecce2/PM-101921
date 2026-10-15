@@ -44,6 +44,19 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // Przycisk kropki (.)
+        findViewById<Button>(R.id.btnDot).setOnClickListener {
+            if (isNewOperation) {
+                currentInput = "0"
+                isNewOperation = false
+            }
+            if (!currentInput.contains(".")) {
+                if (currentInput.isEmpty()) currentInput = "0"
+                currentInput += "."
+            }
+            tvResult.text = currentInput
+        }
+
         // Przycisk czyszczenia (C)
         findViewById<Button>(R.id.btnC).setOnClickListener {
             currentInput = ""
